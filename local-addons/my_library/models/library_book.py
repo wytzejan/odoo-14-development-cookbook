@@ -1,3 +1,4 @@
+from unicodedata import category
 from odoo import models, fields
 
 
@@ -41,6 +42,7 @@ class LibraryBook(models.Model):
         context={},
         domain=[]
     )
+    category_id = fields.Many2one('library.book.category')
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
