@@ -12,5 +12,4 @@
         'security/ir.model.access.csv',
         'views/library_book.xml'
     ],
-    'demo': ['demo.xml']
 }

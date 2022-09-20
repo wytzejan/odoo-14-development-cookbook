@@ -18,8 +18,11 @@
                     <group>
                         <field name='name' />
                         <field name='author_ids' widget='many2many_tags' />
+                        <field name='category_id' />
                         <field name='state' />
                         <field name='pages' />
+                        <field name='retail_price' />
+                        <field name='currency_id' />
                         <field name='cost_price' />
                         <field name='notes' />
                     </group>
