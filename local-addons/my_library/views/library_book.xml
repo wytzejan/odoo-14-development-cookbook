@@ -29,6 +29,7 @@
                     <group>
                         <field name='short_name' />
                         <field name='date_release' />
+                        <field name='age_days' />
                         <field name='date_updated' />
                         <field name='cover' widget='image' class='oe_avater' />
                         <field name='reader_rating' />
