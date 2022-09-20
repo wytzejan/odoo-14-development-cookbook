@@ -1,5 +1,4 @@
-from unicodedata import category
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class LibraryBook(models.Model):
@@ -43,6 +42,21 @@ class LibraryBook(models.Model):
         domain=[]
     )
     category_id = fields.Many2one('library.book.category')
+
+    _sql_constraints = [
+        ('name_uniq', 'UNIQUE (name)',
+            'Book title must be unique.'),
+        ('positive_page', 'CHECK(pages>0)',
+            'No of pages must be positive')
+    ]
+
+    @api.constrains('date_release')
+    def _check_release_date(self):
+        for record in self:
+            if record.date_release and record.date_release > fields.Date.today():
+                raise models.ValidationError(
+                    'Release date must be in the past')
+
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
