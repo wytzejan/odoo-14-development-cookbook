@@ -21,10 +21,11 @@ class LibraryBook(models.Model):
     short_name = fields.Char('Short Title', required=True)
     notes = fields.Text('Internal Notes')
     state = fields.Selection(
-        [('draft', 'Not Available'),
+        [('draft', 'Unavailable'),
          ('available', 'Available'),
+         ('borrowed', 'Borrowed'),
          ('lost', 'Lost')],
-        'State')
+        'State', default='draft')
     description = fields.Html('Description')
     cover = fields.Binary('Book Cover')
     out_of_print = fields.Boolean('Out of Print?')
@@ -117,6 +118,31 @@ class LibraryBook(models.Model):
         models = self.env['ir.model'].search([
             ('field_id.name', '=', 'message_ids')])
         return [(x.model, x.name) for x in models]
+
+    @api.model
+    def is_allowed_transition(self, old_state, new_state):
+        allowed = [('draft', 'available'),
+                   ('available', 'borrowed'),
+                   ('available', 'lost'),
+                   ('borrowed', 'lost'),
+                   ('lost', 'available')]
+        return (old_state, new_state) in allowed
+
+    def change_state(self, new_state):
+        for book in self:
+            if book.is_allowed_transition(book.state, new_state):
+                book.state = new_state
+            else:
+                continue
+
+    def make_available(self):
+        self.change_state('available')
+
+    def make_borrowed(self):
+        self.change_state('borrowed')
+
+    def make_lost(self):
+        self.change_state('lost')
 
 
 class ResPartner(models.Model):
