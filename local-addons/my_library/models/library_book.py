@@ -2,11 +2,21 @@ from datetime import timedelta
 from odoo import models, fields, api
 
 
+class BaseArchive(models.AbstractModel):
+    _name = 'base.archive'
+    active = fields.Boolean(default=True)
+
+    def do_archive(self):
+        for record in self:
+            record.active = not record.active
+
+
 class LibraryBook(models.Model):
     _name = 'library.book'
     _description = 'Library Book'
     _order = 'date_release desc, name'
     _rec_name = 'short_name'
+    _inherit = ['base.archive']
     name = fields.Char('Title', required=True)
     short_name = fields.Char('Short Title', required=True)
     notes = fields.Text('Internal Notes')
@@ -42,6 +52,10 @@ class LibraryBook(models.Model):
         context={},
         domain=[]
     )
+    publisher_city = fields.Char(
+        'Publisher City',
+        related='publisher_id.city',
+        readonly=True)
     category_id = fields.Many2one('library.book.category')
     age_days = fields.Float(
         string='Days Since Release',
@@ -51,6 +65,9 @@ class LibraryBook(models.Model):
         store=False,
         compute_sudo=True
     )
+    ref_doc_id = fields.Reference(
+        selection='_referencable_models',
+        string='Reference Document')
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE (name)',
@@ -95,6 +112,12 @@ class LibraryBook(models.Model):
         new_op = operator_map.get(operator, operator)
         return [('date_release', new_op, value_date)]
 
+    @api.model
+    def _referencable_models(self):
+        models = self.env['ir.model'].search([
+            ('field_id.name', '=', 'message_ids')])
+        return [(x.model, x.name) for x in models]
+
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -104,3 +127,22 @@ class ResPartner(models.Model):
     authored_book_ids = fields.Many2many(
         'library.book',
         string='Authored Books')
+    count_books = fields.Integer(
+        'Number of Authored Books', compute='_compute_count_books')
+
+    @api.depends('authored_book_ids')
+    def _compute_count_books(self):
+        for r in self:
+            r.count_books = len(r.authored_book_ids)
+
+
+class LibraryMember(models.Model):
+    _name = 'library.member'
+    _inherits = {'res.partner': 'partner_id'}
+    partner_id = fields.Many2one(
+        'res.partner',
+        ondelete='cascade')
+    date_start = fields.Date('Member Since')
+    date_end = fields.Date('Termination Date')
+    member_number = fields.Char()
+    date_of_birth = fields.Date('Date of birth')
