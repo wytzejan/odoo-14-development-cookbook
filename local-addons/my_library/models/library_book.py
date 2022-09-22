@@ -147,8 +147,13 @@ class LibraryBook(models.Model):
 
     def make_lost(self):
         self.change_state('lost')
-
-
+    
+    def get_all_library_members(self):
+        library_member_model = self.env['library.member']
+        all_members = library_member_model.search([])
+        print("ALL MEMBERS:", all_members)
+        return True
+        
 class ResPartner(models.Model):
     _inherit = 'res.partner'
     published_book_ids = fields.One2many(
