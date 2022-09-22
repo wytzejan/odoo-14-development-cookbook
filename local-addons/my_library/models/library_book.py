@@ -180,6 +180,10 @@ class LibraryBook(models.Model):
     @api.model
     def books_with_multiple_authors_two(self, all_books):
         return all_books.filter(lambda b: len(b.author_ids) > 1)
+    
+    @api.model
+    def get_author_names(self, books):
+        return books.mapped('author_ids.name')
 
 
 class ResPartner(models.Model):
