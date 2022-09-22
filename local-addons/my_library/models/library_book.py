@@ -184,6 +184,10 @@ class LibraryBook(models.Model):
     @api.model
     def get_author_names(self, books):
         return books.mapped('author_ids.name')
+    
+    @api.model
+    def sort_books_by_date(self, books):
+        return books.sorted(key='release_date')
 
 
 class ResPartner(models.Model):
