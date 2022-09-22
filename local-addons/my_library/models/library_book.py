@@ -157,9 +157,6 @@ class LibraryBook(models.Model):
     def change_release_date(self):
         self.ensure_one()
         self.date_release = fields.Date.today()
-
-    def change_update_date(self):
-        self.ensure_one()
         
 class ResPartner(models.Model):
     _inherit = 'res.partner'
