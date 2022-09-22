@@ -167,7 +167,21 @@ class LibraryBook(models.Model):
                      ('category_id.name', 'ilike', 'Category Name 2')
         ]
         books = self.search(domain)
-        
+    
+    @api.model
+    def books_with_multiple_authors(self, all_books):
+        def predicate(book):
+            if len(book.author_ids) > 1:
+                return True
+            return False
+        return all_books.filter(predicate)
+    
+    # or
+    @api.model
+    def books_with_multiple_authors_two(self, all_books):
+        return all_books.filter(lambda b: len(b.author_ids) > 1)
+
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
     published_book_ids = fields.One2many(
