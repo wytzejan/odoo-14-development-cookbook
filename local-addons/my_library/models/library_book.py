@@ -153,6 +153,13 @@ class LibraryBook(models.Model):
         all_members = library_member_model.search([])
         print("ALL MEMBERS:", all_members)
         return True
+    
+    def change_release_date(self):
+        self.ensure_one()
+        self.date_release = fields.Date.today()
+
+    def change_update_date(self):
+        self.ensure_one()
         
 class ResPartner(models.Model):
     _inherit = 'res.partner'

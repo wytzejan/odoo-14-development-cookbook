@@ -19,6 +19,7 @@
                     <button name="make_borrowed" string="Make Borrowed" type="object" />
                     <button name="make_lost" string="Make Lost" type="object" />
                     <button name="get_all_library_members" string="Log Members" type="object" />
+                    <button name="change_release_date" string="Update Date" type="object" />
                     <field name="state" widget="statusbar"/>
                 </header>
                 <group>
