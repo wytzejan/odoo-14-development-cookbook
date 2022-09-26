@@ -137,7 +137,8 @@ class LibraryBook(models.Model):
             if book.is_allowed_transition(book.state, new_state):
                 book.state = new_state
             else:
-                msg = _('Moving from %s to %s is not allowed') % (book.state, new_state)
+                msg = _('Moving from %s to %s is not allowed') % (
+                    book.state, new_state)
                 raise UserError(msg)
 
     def make_available(self):
@@ -148,27 +149,27 @@ class LibraryBook(models.Model):
 
     def make_lost(self):
         self.change_state('lost')
-    
+
     def get_all_library_members(self):
         library_member_model = self.env['library.member']
         all_members = library_member_model.search([])
         print("ALL MEMBERS:", all_members)
         return True
-    
+
     def change_release_date(self):
         self.ensure_one()
         self.date_release = fields.Date.today()
-    
+
     def find_book(self):
         domain = [
             '|',
-                '&', ('name', 'ilike', 'Book Name'),
-                     ('category_id.name', 'ilike', 'Category Name'),
-                '&', ('name', 'ilike', 'Book Name 2'),
-                     ('category_id.name', 'ilike', 'Category Name 2')
+            '&', ('name', 'ilike', 'Book Name'),
+            ('category_id.name', 'ilike', 'Category Name'),
+            '&', ('name', 'ilike', 'Book Name 2'),
+            ('category_id.name', 'ilike', 'Category Name 2')
         ]
         books = self.search(domain)
-    
+
     @api.model
     def books_with_multiple_authors(self, all_books):
         def predicate(book):
@@ -176,32 +177,32 @@ class LibraryBook(models.Model):
                 return True
             return False
         return all_books.filter(predicate)
-    
+
     # or
     @api.model
     def books_with_multiple_authors_two(self, all_books):
         return all_books.filter(lambda b: len(b.author_ids) > 1)
-    
+
     @api.model
     def get_author_names(self, books):
         return books.mapped('author_ids.name')
-    
+
     @api.model
     def sort_books_by_date(self, books):
         return books.sorted(key='release_date')
-    
+
     @api.model
     def create(self, values):
-        if not self.user_has_groups('my_library.acl_book_librarian'):
+        if not self.user_has_groups('my_library.group_librarian'):
             if 'manager_remarks' in values:
                 raise UserError(
                     'You are not allowed to modify '
                     'manager_remarks'
                 )
         return super(LibraryBook, self).create(values)
-    
+
     def write(self, values):
-        if not self.user_has_groups('my_library.acl_book_librarian'):
+        if not self.user_has_groups('my_library.group_librarian'):
             if 'manager_remarks' in values:
                 raise UserError(
                     'You are not allowed to modify '
