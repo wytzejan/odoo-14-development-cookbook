@@ -71,6 +71,7 @@ class LibraryBook(models.Model):
     ref_doc_id = fields.Reference(
         selection='_referencable_models',
         string='Reference Document')
+    manager_remarks = fields.Text('Manager Remarks')
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE (name)',
@@ -188,6 +189,25 @@ class LibraryBook(models.Model):
     @api.model
     def sort_books_by_date(self, books):
         return books.sorted(key='release_date')
+    
+    @api.model
+    def create(self, values):
+        if not self.user_has_groups('my_library.acl_book_librarian'):
+            if 'manager_remarks' in values:
+                raise UserError(
+                    'You are not allowed to modify '
+                    'manager_remarks'
+                )
+        return super(LibraryBook, self).create(values)
+    
+    def write(self, values):
+        if not self.user_has_groups('my_library.acl_book_librarian'):
+            if 'manager_remarks' in values:
+                raise UserError(
+                    'You are not allowed to modify '
+                    'manager_remarks'
+                )
+        return super(LibraryBook, self).write(values)
 
 
 class ResPartner(models.Model):

@@ -36,6 +36,7 @@
                         <field name='cost_price' />
                         <field name='notes' />
                         <field name='ref_doc_id' />
+                        <field name='manager_remarks' />
                     </group>
                     <group>
                         <field name='short_name' />
