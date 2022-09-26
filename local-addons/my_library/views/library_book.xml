@@ -25,6 +25,7 @@
                 <group>
                     <group>
                         <field name='name' />
+                        <field name='isbn' />
                         <field name='author_ids' widget='many2many_tags' />
                         <field name='publisher_id' />
                         <field name='publisher_city' />
@@ -37,6 +38,7 @@
                         <field name='notes' />
                         <field name='ref_doc_id' />
                         <field name='manager_remarks' />
+                        <field name='old_edition' />
                     </group>
                     <group>
                         <field name='short_name' />

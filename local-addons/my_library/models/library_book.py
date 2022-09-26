@@ -20,6 +20,7 @@ class LibraryBook(models.Model):
     _rec_name = 'short_name'
     _inherit = ['base.archive']
     name = fields.Char('Title', required=True)
+    isbn = fields.Char('ISBN')
     short_name = fields.Char('Short Title', required=True)
     notes = fields.Text('Internal Notes')
     state = fields.Selection(
@@ -72,6 +73,7 @@ class LibraryBook(models.Model):
         selection='_referencable_models',
         string='Reference Document')
     manager_remarks = fields.Text('Manager Remarks')
+    old_edition = fields.Many2one('library.book', string='Old Edition')
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE (name)',
@@ -209,6 +211,26 @@ class LibraryBook(models.Model):
                     'manager_remarks'
                 )
         return super(LibraryBook, self).write(values)
+
+    def name_get(self):
+        result = []
+        for book in self:
+            authors = book.author_ids.mapped('name')
+            name = '%s (%s)' % (book.name, ', '.join(authors))
+            result.append((book.id, name))
+            return result
+
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = []
+        if not (name == '' and operator == 'ilike'):
+            args += ['|', '|',
+                     ('name', operator, name),
+                     ('isbn', operator, name),
+                     ('author_ids.name', operator, name)
+                     ]
+        return super(LibraryBook, self)._name_search(
+            name=name, args=args, operator=operator,
+            limit=limit, name_get_uid=name_get_uid)
 
 
 class ResPartner(models.Model):
