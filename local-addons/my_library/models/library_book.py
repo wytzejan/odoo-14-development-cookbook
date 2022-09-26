@@ -1,7 +1,10 @@
+import logging
 from datetime import timedelta
 from odoo import models, fields, api
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 
 class BaseArchive(models.AbstractModel):
@@ -231,6 +234,19 @@ class LibraryBook(models.Model):
         return super(LibraryBook, self)._name_search(
             name=name, args=args, operator=operator,
             limit=limit, name_get_uid=name_get_uid)
+
+    def get_average_cost(self):
+        average_cost = self._get_average_cost()
+        _logger.info("Average Cost %s" % average_cost)
+
+    @api.model
+    def _get_average_cost(self):
+        grouped_result = self.read_group(
+            [('cost_price', "!=", False)],  # Domain
+            ['category_id', 'cost_price:avg'],  # Fields to access
+            ['category_id']  # group_by
+        )
+        return grouped_result
 
 
 class ResPartner(models.Model):
