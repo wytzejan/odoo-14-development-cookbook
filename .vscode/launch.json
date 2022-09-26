@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Odoo-debug",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": false,
+            "pythonPath": "${workspaceFolder}/venv-odoo-14.0/bin/python3",
+            "program": "${workspaceFolder}/odoo/odoo-bin",
+            "args": [
+                "--config",
+                "${workspaceFolder}/myodoo.cfg",
+                "-u",
+                "my_library",
+            ],
+            "console": "integratedTerminal",
+        },
+    ]
+}
