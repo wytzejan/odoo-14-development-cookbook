@@ -6,7 +6,7 @@
             "type": "python",
             "request": "launch",
             "stopOnEntry": false,
-            "pythonPath": "${workspaceFolder}/venv-odoo-14.0/bin/python3",
+            "python": "${workspaceFolder}/venv-odoo-14.0/bin/python3",
             "program": "${workspaceFolder}/odoo/odoo-bin",
             "args": [
                 "--config",
