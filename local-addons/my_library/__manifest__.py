@@ -5,7 +5,7 @@
     'author': 'Wytze Jan Riedstra',
     'website': 'https://www.example.com',
     'category': 'Uncategorized',
-    'version': '14.0.1',
+    'version': '14.0.1.0.1',
     'depends': ['base'],
     'data': [
         'security/groups.xml',
