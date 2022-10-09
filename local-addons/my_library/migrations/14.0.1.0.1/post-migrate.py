@@ -13,4 +13,4 @@ def migrate(cr, version):
                 # probably a year
                 new_date = date(int(old_date), 1, 1)
         if new_date:
-            cr.execute('UPDATE library_book SET date_release=%s', (new_date))
+            cr.execute('UPDATE library_book SET date_release=%s',(new_date,))
