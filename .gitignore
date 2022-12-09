@@ -132,3 +132,5 @@ dmypy.json
 # Local Odoo folders and files
 odoo/
 myodoo.cfg
+
+learning.md
