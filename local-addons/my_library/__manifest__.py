@@ -13,6 +13,7 @@
         'views/library_book.xml',
         'views/library_book_categ.xml',
         'data/data.xml',
+        'data/data_update.xml',
         'data/demo.xml'
     ],
 }
